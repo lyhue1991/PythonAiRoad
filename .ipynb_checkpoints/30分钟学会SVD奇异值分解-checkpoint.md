@@ -118,7 +118,7 @@ def rebuildFromSVD(ur,sr,vtr):
 
 img = data.camera()/255.0
 
-plt.figure(figsize=(10,10)) 
+plt.figure(figsize=(10,8)) 
 for i,r in enumerate([5,10,20,30,40,50,100,200],start = 1):
     ur,sr,vtr = compressBySVD(img,r)
     compress_ratio = (np.product(ur.shape) + len(sr) + 
@@ -140,6 +140,8 @@ plt.show()
 
 
 ```
+
+![](./data/svd与矩阵压缩.png)
 
 ```python
 
@@ -218,12 +220,39 @@ print("\ndecomposition by svd:")
 U,S,Vt = np.linalg.svd(X-X.mean(axis = 0))
 print("singular value:\n",S[:2])
 print("X_new:")
-print((X-X.mean(axis = 0))@np.transpose(Vt)[:,0:2])
+print(np.dot(X-X.mean(axis = 0),np.transpose(Vt)[:,0:2]))
 
-# 注：降维结果中符号的差异是因为PCA调整了SVD分解后的U和Vt符号
-# 使得每列最大值元素的符号为正
+# 注：降维结果中正负号的差异是因为PCA调整了SVD分解后的U和Vt符号以保持各列最大值取正
 ```
 
-```python
-
 ```
+decomposition by pca:
+singular value:
+[11.31375337  2.89544001]
+X_new:
+[[ 3.23378083  1.06346839]
+ [ 3.88607412 -0.50763321]
+ [ 6.25267378  0.08479886]
+ [-3.50509914 -0.96584476]
+ [-6.02398361  1.89494314]
+ [-3.84344598 -1.56973242]]
+
+decomposition by svd:
+singular value:
+ [11.31375337  2.89544001]
+X_new:
+[[-3.23378083 -1.06346839]
+ [-3.88607412  0.50763321]
+ [-6.25267378 -0.08479886]
+ [ 3.50509914  0.96584476]
+ [ 6.02398361 -1.89494314]
+ [ 3.84344598  1.56973242]]
+```
+
+
+如果对本文内容理解上有需要进一步和作者交流的地方，欢迎在公众号"Python与算法之美"下留言。作者时间和精力有限，会酌情予以回复。
+
+也可以在公众号后台回复关键字：加群，加入读者交流群和大家讨论。
+
+
+![](./data/Python与算法之美logo.jpg)
