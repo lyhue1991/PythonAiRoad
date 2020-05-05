@@ -21,7 +21,7 @@ SVD(Singular Value Decomposition)奇异值分解分解是机器学习中最重�
 
 SVD分解具有非常深刻的几何含义。矩阵实际上对应着一种线性变换，一个矩阵作用到一个向量上，会得到一个新的向量。任何一个矩阵$A$的操作效果可以分解成一次旋转$V^T$，一次拉伸和维度改变$\Sigma $，以及另外一次旋转$U$三者作用效果的合成。
 
-SVD分解通常用于数据压缩和数据降维，既可以对列降维，也可以对行降维，其中对列的降维等价于PCA的降维。
+SVD分解通常用于数据压缩和数据降维。用于数据降维时，既可以对列降维，也可以对行降维，其中对列的降维等价于PCA的降维。
 
 不仅如此，SVD算法还可以用于在声音和图像处理中剥离背景信号，在推荐算法中也经常出现它的身影。
 
@@ -48,7 +48,7 @@ SVD分解有着非常深刻的几何含义。
 注意正交矩阵$V^T$和$U$作用到向量后是不会改变向量长度的，所以对应着旋转变换。
 <!-- #endregion -->
 
-![](./data/SVD分解形状.png)
+![](./data/SVD公式.png)
 
 ```python
 
@@ -88,7 +88,7 @@ $\Sigma\Sigma^T$ 依然是对角矩阵，又U为正交矩阵。
 
 
 
-![](./data/奇异值分解.png)
+![](./data/SVD分解与数据压缩.png)
 
 
 假设 m = 10000,n = 8000,原来存储矩阵A需要存储8000万个数字，如果经过奇异值分解发现前100个奇异值贡献了99%的奇异值之和，于是可以近似只保留这100个奇异值及对应的左右奇异向量，那么只需要保留100+10000×100+100×8000= 180.01万个数字，只有原来的不到2.3%。
@@ -104,35 +104,35 @@ import numpy as np
 from matplotlib import pyplot as plt
 from skimage import data
 
-def compressBySVD(img,k):
+def compressBySVD(img,r):
     u,s,vt = np.linalg.svd(img)
-    uk = u[:,0:k]
-    sk = s[0:k]
-    vtk = vt[0:k,:]
-    return (uk,sk,vtk)
+    ur = u[:,0:r]
+    sr = s[0:r]
+    vtr = vt[0:r,:]
+    return (ur,sr,vtr)
 
-def rebuildFromSVD(uk,sk,vtk):
-    img = uk@np.diag(sk)@vtk
+def rebuildFromSVD(ur,sr,vtr):
+    img = ur@np.diag(sr)@vtr
     return(img)
 
 
 img = data.camera()/255.0
 
 plt.figure(figsize=(10,10)) 
-for i,k in enumerate([5,10,20,30,40,50,100,200],start = 1):
-    uk,sk,vtk = compressBySVD(img,k)
-    compress_ratio = (np.product(uk.shape) + len(sk) + 
-                      np.product(vtk.shape))/np.product(img.shape)
-    img_rebuild = rebuildFromSVD(uk,sk,vtk)
+for i,r in enumerate([5,10,20,30,40,50,100,200],start = 1):
+    ur,sr,vtr = compressBySVD(img,r)
+    compress_ratio = (np.product(ur.shape) + len(sr) + 
+                      np.product(vtr.shape))/np.product(img.shape)
+    img_rebuild = rebuildFromSVD(ur,sr,vtr)
     ax=plt.subplot(3,3,i)
     ax.imshow(img_rebuild,cmap = "gray")
-    ax.set_title("k=%d"%k+" compress_ratio=%.2f"%compress_ratio)
+    ax.set_title("r=%d"%r+", compress_ratio=%.2f"%compress_ratio)
     ax.set_xticks([])
     ax.set_yticks([]) 
     
 ax = plt.subplot(3,3,9)
 ax.imshow(img,cmap = "gray")
-ax.set_title("original image, k = 512")
+ax.set_title("r = 512, original image")
 ax.set_xticks([])
 ax.set_yticks([]) 
 
@@ -146,6 +146,15 @@ plt.show()
 ```
 
 ### 四，SVD分解和PCA降维
+
+
+PCA降维可以看成是SVD分解的一个应用。PCA降维使用的变换矩阵恰好是SVD分解的右奇异矩阵$V$。
+
+实际上，由于SVD分解存在着无需通过计算特征值和特征向量的可并行的数值迭代计算算法，sklearn的PCA降维算法正是通过SVD分解计算的。
+
+
+
+![](./data/SVD与PCA降维.png)
 
 
 下面证明SVD分解的右奇异向量构成的矩阵$V$恰好是PCA算法所需要的正交变换矩阵$W$。
@@ -178,5 +187,43 @@ $$V^T(X - \overline{X})^T(X - \overline{X})V =  \Lambda $$
 
 $$W = V$$
 
-注意到PCA算法实际上是一种列降维的方法，实际上利用SVD分解的左奇异矩阵U也可以对矩阵进行行降维。
+注意到PCA算法实际上是一种列降维的方法，实际上利用SVD分解的左奇异矩阵$U$也可以对矩阵进行行降维。
 
+
+
+![](./data/SVD分解与行降维.png)
+
+```python
+# 演示SVD用于PCA降维的计算
+
+%matplotlib inline 
+%config InlineBackend.figure_format = 'svg'
+import numpy as np 
+from sklearn.decomposition import PCA
+
+from matplotlib import pyplot as plt
+from skimage import data
+
+X = np.array([[-1.0, -3, -2], [-2, -1, -3], [-3, -2, -5], [2, 1, 3], [6, 1, 3], [2, 2, 3]])
+
+pca = PCA(n_components= 2)
+X_new = pca.fit_transform(X)
+print("\ndecomposition by pca:")
+print("singular value:")
+print(pca.singular_values_)
+print("X_new:")
+print(X_new)
+
+print("\ndecomposition by svd:")
+U,S,Vt = np.linalg.svd(X-X.mean(axis = 0))
+print("singular value:\n",S[:2])
+print("X_new:")
+print((X-X.mean(axis = 0))@np.transpose(Vt)[:,0:2])
+
+# 注：降维结果中符号的差异是因为PCA调整了SVD分解后的U和Vt符号
+# 使得每列最大值元素的符号为正
+```
+
+```python
+
+```
