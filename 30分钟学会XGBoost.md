@@ -128,9 +128,8 @@ xgboost选择某个特征的分裂点位的方法有两种，一种是全局扫�
 
 ### 五，xgboost使用范例
 
-```python
 
-```
+以下为xgboost的使用范例，
 
 ```python
 import numpy as np
