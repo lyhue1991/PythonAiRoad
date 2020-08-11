@@ -91,11 +91,11 @@ $$\frac{\partial(ln L(x_1,x_2,x_3,...,x_N;\pmb{\theta}))}
 
 正态分布的概率密度函数为
 
-$$f(x_i; \mu, \sigma) = \frac{\sqrt{2} e^{- \frac{\left(- \mu + x_{i}\right)^{2}}{2 \sigma^{2}}}}{2 \sqrt{\pi} \sigma}$$ 
+$$f(x_i; \mu, \sigma) = \frac{\sqrt{2} e^{- \frac{(- \mu + x_{i})^2}{2 \sigma^{2}}}}{2 \sqrt{\pi} \sigma}$$ 
 
 对应的对数似然函数为
 
-$$lnL(x_1,x_2,x_3,...,x_N;\pmb{\theta}) = \sum_{i=1}^{N}ln(\frac{\sqrt{2} e^{- \frac{\left(- \mu + x_{i}\right)^{2}}{2 \sigma^{2}}}}{2 \sqrt{\pi} \sigma})$$
+$$lnL(x_1,x_2,x_3,...,x_N;\pmb{\theta}) = \sum_{i=1}^{N}ln(\frac{\sqrt{2} e^{- \frac{(- \mu + x_{i})^2}{2 \sigma^{2}}}}{2 \sqrt{\pi} \sigma})$$
 
 对数似然函数取极大值时，有
 
