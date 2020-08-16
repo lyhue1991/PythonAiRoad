@@ -44,14 +44,14 @@ EM算法在机器学习的许多算法中都有使用到，如
 
 按照极大似然原理，并使用全概率公式，似然函数可以写成
 
- $$L(x_1,x_2,x_3,...,x_N;\pmb{\theta})=  
- \prod_\limits{i=0}^{N}P(x_i\,;\,\pmb{\theta})=
- \prod_\limits{i=0}^{N}\sum_{z}P(z;\pmb{\theta})P(x_i\,|z;\,\pmb{\theta})$$
+ $$L(x^{(1)},x^{(2)},x^{(3)},...,x^{(N)};\pmb{\theta})=  
+ \prod_\limits{i=0}^{N}P(x^{(i)}\,;\,\pmb{\theta})=
+ \prod_\limits{i=0}^{N}\sum_{z}P(z;\pmb{\theta})P(x^{(i)}\,|z;\,\pmb{\theta})$$
  
  对数似然函数可以写成
 
- $$lnL(x_1,x_2,x_3,...,x_N;\pmb{\theta})=  
- \sum_\limits{i=0}^{N}ln(\sum_{z}P(z;\pmb{\theta})P(x_i\,|z;\,\pmb{\theta}))$$
+ $$L(x^{(1)},x^{(2)},x^{(3)},...,x^{(N)};\pmb{\theta})=  
+ \sum_\limits{i=0}^{N}ln(\sum_{z}P(z;\pmb{\theta})P(x^{(i)}\,|z;\,\pmb{\theta}))$$
  
  对数似然函数中，由于有对$P(z;\pmb{\theta})$的求和，如果尝试对$\pmb{\theta}$求偏导等于0来计算最优的$\pmb{\theta}$，将难以得到对应的解析解。这和目标函数非常复杂时，无法直接解析求解只能使用梯度下降这类迭代算法是一样的。
  
@@ -61,31 +61,32 @@ EM算法在机器学习的许多算法中都有使用到，如
  
  我们可以尝试和梯度下降算法效果相当的迭代算法。最大期望算法EM正是可以实现这个目的。
  
- 大概原理如下，我们首先给$\pmb{\theta}$赋初始值 $\pmb{\theta}_0$，然后在此基础上，找到一个可以使得对数似然函数变大的$\pmb{\theta}_1$，然后再在此基础上找到一个能够使对数似然函数变得更大的$\pmb{\theta}_2$,如此便可不断地提高对数似然函数的值。迭代执行n干次后，如果$\pmb{\theta}_n$和$\pmb{\theta}_{n+1}$的差值足够小，那么我们认为就找到了比较合适的$\pmb{\theta}_n$作为$\pmb{\theta}$的估计值。
+ 大概原理如下，我们首先给$\pmb{\theta}$赋初始值 $\pmb{\theta}^{\{0\}}$，然后在此基础上，找到一个可以使得对数似然函数变大的$\pmb{\theta}^{\{1\}}$，然后再在此基础上找到一个能够使对数似然函数变得更大的$\pmb{\theta}_2$,如此便可不断地提高对数似然函数的值。迭代执行n干次后，如果$\pmb{\theta}^{\{n\}}$和$\pmb{\theta}^{\{n+1\}}$的差值足够小，那么我们认为就找到了比较合适的 
+ $\pmb{\theta}^{\{n\}}$  作为 $\pmb{\theta}$ 的估计值。
  
  下面阐述最大期望算法的原理推导。
  
  假设在第n次迭代，我们的对数似然函数取值为
  
-$$lnL(x_1,x_2,x_3,...,x_N;\pmb{\theta}_n) = \sum_\limits{i=0}^{N}ln(\sum_{z}P(z;\pmb{\theta}_n)P(x_i\,|z;\,\pmb{\theta}_n))$$
+$$lnL(x^{(1)},x^{(2)},x^{(3)},...,x^{(N)};\pmb{\theta}^{\{n\}}) = \sum_\limits{i=0}^{N}ln(\sum_{z}P(z;\pmb{\theta}^{\{n\}})P(x_i\,|z;\,\pmb{\theta}^{\{n\}})$$
  
-我们希望找到一个$\pmb{\theta}_{n+1}$使得
+我们希望找到一个$\pmb{\theta}^{\{n+1\}}$使得
 
-$$lnL(x_1,x_2,x_3,...,x_N;\pmb{\theta}_{n+1})-  lnL(x_1,x_2,x_3,...,x_N;\pmb{\theta}_n)\ge 0$$
+$$lnL(x^{(1)},x^{(2)},x^{(3)},...,x^{(N)};\pmb{\theta}^{\{n+1\}})-  lnL(x^{(1)},x^{(2)},x^{(3)},...,x^{(N)};\pmb{\theta}^{\{n\}})\ge 0$$
 
-下面我们开始寻找符合条件的$\pmb{\theta}_{n+1}$
+下面我们开始寻找符合条件的$\pmb{\theta}^{\{n+1\}}$
 
 构造函数
 
-$$F(\pmb{\theta},\pmb{\theta}_{n}) = 
-lnL(x_1,x_2,x_3,...,x_N;\pmb{\theta}) - lnL(x_1,x_2,x_3,...,x_N;\pmb{\theta}_n)$$
+$$F(\pmb{\theta},\pmb{\theta}^{\{n\}}) = 
+lnL(x^{(1)},x^{(2)},x^{(3)},...,x^{(N)};\pmb{\theta}) - lnL(x^{(1)},x^{(2)},x^{(3)},...,x^{(N)};\pmb{\theta}^{\{n\}})$$
 
-$$=\sum_\limits{i=0}^{N}ln(\sum_{z}P(z;\pmb{\theta})P(x_i\,|z;\,\pmb{\theta}))
-- \sum_\limits{i=0}^{N}ln P(x_i;\pmb{\theta}_n)
+$$=\sum_\limits{i=0}^{N}ln(\sum_{z}P(z;\pmb{\theta})P(x^{(i)}\,|z;\,\pmb{\theta}))
+- \sum_\limits{i=0}^{N}ln P(x^{(i)};\pmb{\theta}^{\{n\}})
 $$
 
-$$=\sum_\limits{i=0}^{N}ln(\sum_{z}P(z\,|\,x_{i};\pmb{\theta_n})\frac{P(z;\pmb{\theta})P(x_i\,|\,z;\pmb{\theta})}{P(z\,|\,x_{i};\pmb{\theta_n})})
-- \sum_\limits{i=0}^{N}ln P(x_i;\pmb{\theta}_n)
+$$=\sum_\limits{i=0}^{N}ln(\sum_{z}P(z\,|\,x^{(i)};\pmb{\theta}^{\{n\}})\frac{P(z;\pmb{\theta})P(x^{(i)}\,|\,z;\pmb{\theta})}{P(z\,|\,x^{(i)};\pmb{\theta}^{\{n\}})})
+- \sum_\limits{i=0}^{N}ln P(x^{(i)};\pmb{\theta}^{\{n\}})
 $$
 
 
@@ -95,62 +96,66 @@ $$ln(E(X)) >= E(ln(X))$$
 
 存在以下缩放：
 
-$$F(\pmb{\theta},\pmb{\theta}_{n}) \ge$$
+$$F(\pmb{\theta},\pmb{\theta}^{\{n\}})\ge$$
 
-$$=\sum_\limits{i=0}^{N}\sum_{z}P(z\,|\,x_{i};\pmb{\theta_n}) ln \frac{P(z;\pmb{\theta})P(x_i\,|\,z;\pmb{\theta})}{P(z\,|\,x_{i};\pmb{\theta}_n)}
--\sum_\limits{i=0}^{N}\sum_{z}P(z\,|\,x_{i};\pmb{\theta_n})ln P(x_i;\pmb{\theta}_n)
+$$=\sum_\limits{i=0}^{N}\sum_{z}P(z\,|\,x^{(i)};\pmb{\theta}^{\{n\}}) ln \frac{P(z;\pmb{\theta})P(x^{(i)}\,|\,z;\pmb{\theta})}{P(z\,|\,x^{(i)};\pmb{\theta}^{\{n\}})}
+-\sum_\limits{i=0}^{N}\sum_{z}P(z\,|\,x^{(i)};\pmb{\theta}^{\{n\}})ln P(x^{(i)};\pmb{\theta}^{\{n\}})
 $$
 
-$$=\sum_\limits{i=0}^{N}\sum_{z}P(z\,|\,x_{i};\pmb{\theta_n}) ln \frac{P(z;\pmb{\theta})P(x_i\,|\,z;\pmb{\theta})}{P(z\,|\,x_{i};\pmb{\theta_n})P(x_i;\pmb{\theta}_n)}
-$$
+$$=\sum_\limits{i=0}^{N}\sum_{z}P(z\,|\,x^{(i)};\pmb{\theta}^{\{n\}})ln \frac{P(z;\pmb{\theta})P(x^{(i)}\,|\,z;\pmb{\theta})}{P(z\,|\,x^{(i)};\pmb{\theta}^{\{n\}})P(x^{(i)};\pmb{\theta}^{\{n\}})}$$
+
+
 
 令:
 
-$$G(\pmb{\theta},\pmb{\theta_n})=\sum_\limits{i=0}^{N}\sum_{z}P(z\,|\,x_{i};\pmb{\theta}_n) ln \frac{P(z;\pmb{\theta})P(x_i\,|\,z;\pmb{\theta})}{P(z\,|\,x_{i};\pmb{\theta}_n)P(x_i;\pmb{\theta}_n)}
+$$G(\pmb{\theta},\pmb{\theta}^{\{n\}})=\sum_\limits{i=0}^{N}\sum_{z}P(z\,|\,x^{(i)};\pmb{\theta}^{\{n\}})ln \frac{P(z;\pmb{\theta})P(x^{(i)}\,|\,z;\pmb{\theta})}{P(z\,|\,x^{(i)};\pmb{\theta}^{\{n\}})P(x^{(i)};\pmb{\theta}^{\{n\}})}
 $$
 
-则 $$F(\pmb{\theta},\pmb{\theta}_{n}) \ge G(\pmb{\theta},\pmb{\theta}_n)$$
+则 $$F(\pmb{\theta},\pmb{\theta}^{\{n\}}) \ge G(\pmb{\theta},\pmb{\theta}^{\{n\}})$$
 
 注意到
 
-$$ G(\pmb{\theta}_n,\pmb{\theta}_n) = 0$$
+$$ G(\pmb{\theta}^{\{n\}},\pmb{\theta}^{\{n\}}) = 0$$
 
 因此
 
-$$\mathop{max}_{\pmb{\theta}}(G(\pmb{\theta},\pmb{\theta}_n)) >= 0$$
+$$\mathop{max}_{\pmb{\theta}}(G(\pmb{\theta},\pmb{\theta}^{\{n\}})) >= 0$$
 
-取$\pmb{\theta}_{n+1} = \mathop{argmax}_{\theta}G(\theta,\theta_n)$
+
+
+取$$\pmb{\theta}^{\{n+1\}} = \mathop{argmax}_{\pmb{\theta}}G(\pmb{\theta},\pmb{\theta}^{\{n\}})$$
 
 则有
 
-$$F(\pmb{\theta}_{n+1},\pmb{\theta}_{n}) \ge G(\pmb{\theta}_{n+1},\pmb{\theta}_n)\ge 0 $$
+
+$$F(\pmb{\theta}^{\{n+1\}},\pmb{\theta}^{\{n\}}) \ge G(\pmb{\theta}^{\{n+1\}},\pmb{\theta}^{\{n\}})\ge 0 $$
 
 即符合我们寻找的条件。
 
-消除 $G(\pmb{\theta},\pmb{\theta}_n)$ 中与 $\pmb{\theta}$无关的变量，我们可以得到
+消除 $G(\pmb{\theta},\pmb{\theta}^{\{n\}})$ 中与 $\pmb{\theta}$无关的变量，我们可以得到
 
-$$\pmb{\theta}_{n+1} = \mathop{argmax}_{\theta}\sum_\limits{i=0}^{N}\sum_{z}P(z\,|\,x_{i};\pmb{\theta}_n) ln P(x_i,z;\pmb{\theta})$$
+$$\pmb{\theta}^{\{n+1\}} = \mathop{argmax}_{\pmb{\theta}}\sum_\limits{i=0}^{N}\sum_{z}P(z\,|\,x^{(i)};\pmb{\theta}^{\{n\}}) ln P(x^{(i)},z;\pmb{\theta})$$
 
 ```python
 
 ```
 
-注意到$P(z|x_i;\pmb{\theta})$实际上是一个分布，因此右边可以理解成求随机变量
+注意到$P(z|x^{(i)};\pmb{\theta})$实际上是一个分布，因此右边可以理解成求随机变量
 
-$ln P(x_i,z;\pmb{\theta})$在$P(z|x_i;\pmb{\theta})$分布下期望的最大值。
+$ln P(x^{(i)},z;\pmb{\theta})$在$P(z|x^{(i)};\pmb{\theta})$分布下期望的最大值。
 
-$$\pmb{\theta}_{n+1} = \mathop{argmax}_{\theta}\sum_\limits{i=0}^{N}Expectation(ln P(x_i,z;\pmb{\theta})))$$
+$$\pmb{\theta}^{\{n+1\}} = \mathop{argmax}_{\pmb{\theta}}\sum_\limits{i=0}^{N}Expectation(ln P(x^{(i)},z;\pmb{\theta})))$$
 
 
 总结下 EM算法算法的流程：
 
-(1) 初始化 $\pmb{\theta} = \pmb{\theta}_0$。
+(1) 初始化 $\pmb{\theta} = \pmb{\theta}^{\{0\}}$。
 
 注意这里的模型参数$\pmb{\theta}$要是完备的，即给定这些参数，能够计算联合概率分布函数
 
 $P(x,z|\pmb\theta)$,对于男女生混合身高的例子，我们的参数应当包括$\mu_1,\sigma_1,\mu_2,\sigma_2,\alpha$,即男生平均身高和身高标准差，女生平均身高和身高标准差，以及男生的比例。
 
-(2) 计算E步，又分成两小步，先计算概率分布$P(x|x_i;\pmb{\theta})$,再算出期望$\sum_\limits{i=0}^{N}Expectation(ln P(x_i,z;\pmb{\theta})))$
+(2) 计算E步，又分成两小步，先计算概率分布$P(x|x^{(i)};\pmb{\theta})$,再算出期望$\sum_\limits{i=0}^{N}Expectation(ln P(x^{(i)},z;\pmb{\theta})))$
 
 (3) 对E求极大，解出$\pmb\theta$的新的估计，将新的估计值代入第(1)步，直到收敛。
 
@@ -168,12 +173,12 @@ $P(x,z|\pmb\theta)$,对于男女生混合身高的例子，我们的参数应当
 <!-- #region -->
 高斯分布模型也叫正态分布模型，其概率密度函数如下：
 
-$$\phi(x_i; \mu, \sigma) = \frac{1}{ \sqrt{2\pi} \sigma} e^{- \frac{(- \mu + x_{i})^{2}}{2 \sigma^{2}}}$$ 
+$$\phi(x^{(i)}; \mu, \sigma) = \frac{1}{ \sqrt{2\pi} \sigma} e^{- \frac{(- \mu + x^{(i)})^{2}}{2 \sigma^{2}}}$$ 
 
 GMM高斯混合模型的概率密度函数为多个高斯分布的线性组合：
 
 
-$$f(x_i; \mu_1,\mu_2,…\mu_K, \sigma_1,\sigma_2,…\sigma_K,\alpha_1,\alpha_2,…,\alpha_K) = \sum_\limits{k=1}^{K} \alpha_k  \phi(x_i; \mu_k, \sigma_k) = \sum_\limits{k=1}^{K} \alpha_k \frac{1}{ \sqrt{2\pi} \sigma_k} e^{- \frac{(- \mu_k + x_{i})^{2}}{2 \sigma_k^{2}}}$$ 
+$$f(x^{(i)}; \mu_1,\mu_2,…\mu_K, \sigma_1,\sigma_2,…\sigma_K,\alpha_1,\alpha_2,…,\alpha_K) = \sum_\limits{k=1}^{K} \alpha_k  \phi(x^{(i)}; \mu_k, \sigma_k) = \sum_\limits{k=1}^{K} \alpha_k \frac{1}{ \sqrt{2\pi} \sigma_k} e^{- \frac{(- \mu_k + x^{(i)})^{2}}{2 \sigma_k^{2}}}$$ 
 
 其中$\alpha_k$为正数，并且：
 
@@ -184,28 +189,75 @@ $$\sum_\limits{k=1}^{K} \alpha_k = 1$$
 则高斯混合模型的概率密度函数可以表示成如下形式：
 
 
-$$f(x_i; \pmb{\mu}, \pmb{\sigma},\pmb{\alpha}) = \sum_\limits{z=1}^{K} P(z;\pmb{\alpha})  P(x_i\,|\,z;\pmb{\mu},\pmb{\sigma}) $$
+$$f(x^{(i)}; \pmb{\mu}, \pmb{\sigma},\pmb{\alpha}) = \sum_\limits{z=1}^{K} P(z;\pmb{\alpha})  P(x^{(i)}\,|\,z;\pmb{\mu},\pmb{\sigma}) $$
 
 <!-- #endregion -->
 
+<!-- #region -->
 根据EM算法，
 
 （1）我们首先取初始化参数
 
-$$\pmb{\mu} = \pmb{\mu_0}, \pmb{\sigma} = \pmb{\sigma_0},\pmb{\alpha} = \pmb{\alpha_0} $$ 
+$$\pmb{\mu} = \pmb{\mu}^{\{0\}}, \pmb{\sigma} = \pmb{\sigma}^{\{0\}},\pmb{\alpha} = \pmb{\alpha}^{\{0\}} $$ 
 
 然后执行迭代过程。
 
 （2）我们先求期望值
 
-$$Expectation = \sum_\limits{i=0}^{N}\sum_{z}P(z\,|\,x_{i};\pmb{\theta}_n) ln P(x_i,z;\pmb{\theta})$$
+$$Expectation = \sum_\limits{i=0}^{N}\sum_{z}P(z\,|\,x^{(i)};\pmb{\theta}^{\{n\}}) ln P(x^{(i)},z;\pmb{\theta})$$
 
 代入贝叶斯公式
 
-$$P(z\,|\,x_{i};\pmb{\theta}_n) = \frac{P(x_{i}\,|\,z;\pmb{\theta}_n) *  P(z;\pmb{\theta}_n)}{P(x_{i};\pmb{\theta}_n)} $$
 
-$$P(z\,|\,x_{i};\pmb{\theta}_n) = \frac{\phi(x_i;\mu_z, \sigma_z) *  P(z;\pmb{\theta}_n)}{P(x_{i};\pmb{\theta}_n)} $$
+$$P(z\,|\,x^{(i)};\pmb{\theta}^{\{n\}}) = \frac{P(x^{(i)}\,|\,z;\pmb{\theta}^{\{n\}}) P(z;\pmb{\theta}^{\{n\}})}{P(x^{(i)};\pmb{\theta}^{\{n\}})} = \frac{\phi(x^{(i)}; \mu_z^{\{n\}}, \sigma_z^{\{n\}}) \alpha_z^{\{n\}}}{\sum_\limits{k=1}^{K} \phi(x^{(i)}; \mu_k^{\{n\}}, \sigma_k^{\{n\}}) \alpha_k^{\{n\}}}$$
 
-```python
+$$Expectation = \sum_\limits{i=0}^{N}\sum_{z} \frac{\phi(x^{(i)}; \mu_z^{\{n\}}, \sigma_z^{\{n\}}) \alpha_z^{\{n\}}}{\sum_\limits{k=1}^{K} \phi(x^{(i)}; \mu_k^{\{n\}}, \sigma_k^{\{n\}}) \alpha_k^{\{n\}}}  
+ln(\alpha_{z} \phi(x^{(i)}; \mu_z, \sigma_z))$$
 
-```
+（3）我们求期望极大值对应的 $\pmb{\theta}$ 作为  $\pmb{\theta}^{\{n+1\}}$
+
+考虑到约束 $$\sum_\limits{k=1}^{K} \alpha_k = 1$$ 
+
+根据拉格朗日乘子法，作拉格朗日函数
+
+$$L = Expectation - \lambda (\sum_\limits{k=1}^{K} \alpha_k - 1) $$
+<!-- #endregion -->
+
+<!-- #region -->
+取极大值时我们有：
+
+$$\frac{\partial L }{\partial \lambda } = 0$$
+
+$$\frac{\partial L }{\partial \alpha_z} = 0$$
+
+$$\frac{\partial L }{\partial \mu_z} = 0$$
+
+$$\frac{\partial L }{\partial \sigma_z} = 0$$
+
+
+于是我们有：
+
+$$\sum_\limits{k=1}^{K} \alpha_k = 1$$ 
+ 
+ 
+$$\sum_\limits{i=0}^{N} \frac{\phi(x^{(i)}; \mu_z^{\{n\}}, \sigma_z^{\{n\}}) \alpha_z^{\{n\}}}{\sum_\limits{k=1}^{K} \phi(x^{(i)}; \mu_k^{\{n\}}, \sigma_k^{\{n\}}) \alpha_k^{\{n\}}}  
+\frac{1}{\alpha_{z} } - \lambda = 0$$
+
+
+$$\sum_\limits{i=0}^{N} \frac{\phi(x^{(i)}; \mu_z^{\{n\}}, \sigma_z^{\{n\}}) \alpha_z^{\{n\}}}{\sum_\limits{k=1}^{K} \phi(x^{(i)}; \mu_k^{\{n\}}, \sigma_k^{\{n\}}) \alpha_k^{\{n\}}}  
+\frac{1}{\alpha_{z}} \frac{(\mu_z -x^{(i)})}{2 \sigma_z^{2}} = 0 $$
+
+$$\sum_\limits{i=0}^{N} \frac{\phi(x^{(i)}; \mu_z^{\{n\}}, \sigma_z^{\{n\}}) \alpha_z^{\{n\}}}{\sum_\limits{k=1}^{K} \phi(x^{(i)}; \mu_k^{\{n\}}, \sigma_k^{\{n\}}) \alpha_k^{\{n\}}}  
+\frac{1}{\alpha_{z}} (\frac{(\mu_z -x^{(i)})^2}{4 \sigma_z^{3}} - \frac{1}{ \sqrt{2\pi} \sigma_z^{2}}) = 0 $$
+
+解得：
+
+
+$$\alpha_z = \sum_\limits{i=0}^{N} \frac{\phi(x^{(i)}; \mu_z^{\{n\}}, \sigma_z^{\{n\}}) \alpha_z^{\{n\}}}{\sum_\limits{k=1}^{K} \phi(x^{(i)}; \mu_k^{\{n\}}, \sigma_k^{\{n\}}) \alpha_k^{\{n\}}} $$
+
+
+
+如此迭代，直到收敛。
+<!-- #endregion -->
+
+
