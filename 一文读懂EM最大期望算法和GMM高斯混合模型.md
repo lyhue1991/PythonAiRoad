@@ -22,9 +22,6 @@ EM算法在机器学习的许多算法中都有使用到，如
 
 
 
-```python
-
-```
 
 ### 一，EM最大期望算法
 
@@ -99,7 +96,7 @@ $$=\sum_\limits{i=0}^{N}\sum_{z}P(z\,|\,x^{(i)};\pmb{\theta}^{\{n\}}) ln \frac{P
 $$
 
 
-<!-- #region -->
+
 注意到
 
 $$  G(\pmb{\theta}^{\{n\}}) =\sum_\limits{i=0}^{N}\sum_{z}P(z\,|\,x^{(i)};\pmb{\theta}^{\{n\}}) ln \frac{P(x^{(i)},\,z;\pmb{\theta}^{\{n\}})}{P(z\,|\,x^{(i)};\pmb{\theta}^{\{n\}})} $$
@@ -114,7 +111,7 @@ $$= F(\pmb{\theta}^{\{n\}}) $$
 
 
 $$\mathop{max}_{\pmb{\theta}}(G(\pmb{\theta})) >= F(\pmb{\theta}^{\{n\}})$$
-<!-- #endregion -->
+
 
 取$$\pmb{\theta}^{\{n+1\}} = \mathop{argmax}_{\pmb{\theta}}G(\pmb{\theta})$$
 
@@ -129,9 +126,7 @@ $$F(\pmb{\theta}^{\{n+1\}}) \ge G(\pmb{\theta}^{\{n+1\}})\ge F(\pmb{\theta}^{\{n
 
 $$\pmb{\theta}^{\{n+1\}} = \mathop{argmax}_{\pmb{\theta}}\sum_\limits{i=0}^{N}\sum_{z}P(z\,|\,x^{(i)};\pmb{\theta}^{\{n\}}) ln P(x^{(i)},z;\pmb{\theta})$$
 
-```python
 
-```
 
 注意到$P(z|x^{(i)};\pmb{\theta})$实际上是一个分布，因此右边可以理解成求随机变量
 
@@ -157,13 +152,10 @@ $P(x,z|\pmb\theta)$,对于男女生混合身高的例子，我们的参数应当
 
 
 
-```python
-
-```
 
 ### 二，一维GMM高斯混合模型
 
-<!-- #region -->
+
 高斯分布模型也叫正态分布模型，其概率密度函数如下：
 
 $$\phi(x^{(i)}; \mu, \sigma) = \frac{1}{ \sqrt{2\pi} \sigma} e^{- \frac{(- \mu + x^{(i)})^{2}}{2 \sigma^{2}}}$$ 
@@ -184,13 +176,7 @@ $$\sum_\limits{k=1}^{K} \alpha_k = 1$$
 
 $$f(x^{(i)}; \pmb{\mu}, \pmb{\sigma},\pmb{\alpha}) = \sum_\limits{z=1}^{K} P(z;\pmb{\alpha})  P(x^{(i)}\,|\,z;\pmb{\mu},\pmb{\sigma}) $$
 
-<!-- #endregion -->
 
-```python
-
-```
-
-<!-- #region -->
 根据EM算法，
 
 （1）我们首先取初始化参数
@@ -218,9 +204,7 @@ ln(\alpha_{z} \phi(x^{(i)}; \mu_z, \sigma_z))$$
 根据拉格朗日乘子法，作拉格朗日函数
 
 $$L = Expectation - \lambda (\sum_\limits{k=1}^{K} \alpha_k - 1) $$
-<!-- #endregion -->
 
-<!-- #region -->
 取极大值时我们有：
 
 $$\frac{\partial L }{\partial \lambda } = 0$$
@@ -235,8 +219,8 @@ $$\frac{\partial L }{\partial \sigma_z} = 0$$
 于是我们有：
 
 $$\sum_\limits{k=1}^{K} \alpha_k = 1$$ 
- 
- 
+
+
 $$\sum_\limits{i=0}^{N} \frac{\phi(x^{(i)}; \mu_z^{\{n\}}, \sigma_z^{\{n\}}) \alpha_z^{\{n\}}}{\sum_\limits{k=1}^{K} \phi(x^{(i)}; \mu_k^{\{n\}}, \sigma_k^{\{n\}}) \alpha_k^{\{n\}}}  
 \frac{1}{\alpha_{z} } - \lambda = 0$$
 
@@ -257,7 +241,7 @@ $$\sigma_z^{\{n+1\}} = \sqrt{\sum_\limits{i=0}^{N} \frac{\phi(x^{(i)}; \mu_z^{\{
 
 
 如此迭代，直到收敛。
-<!-- #endregion -->
+
 ![](./data/Python与算法之美logo.jpg)
 
 
