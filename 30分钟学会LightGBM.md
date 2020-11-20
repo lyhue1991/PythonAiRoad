@@ -238,11 +238,13 @@ printlog("task end...")
 ```
 
 ```python
-%matplotlib auto
+%matplotlib inline 
+%config InlineBackend.figure_format = 'svg'
 lgb.plot_metric(results,metric = "auc")
 ```
 
 ```python
-%matplotlib auto
+%matplotlib inline 
+%config InlineBackend.figure_format = 'svg'
 lgb.plot_importance(gbm,importance_type = "gain")
 ```
