@@ -37,8 +37,8 @@ from matplotlib.font_manager import FontProperties
 font = FontProperties(fname="./data/SimHei.ttf", size=14)  
 
 # 数据准备
-labels=np.array(["英语","数学","语文","化学","物理","体育"])
-stats=[90, 80, 76, 70, 75, 88]
+labels=["英语","数学","语文","化学","物理","体育","美术"]
+stats=[90, 80, 76, 70, 75, 88,100]
 
 # 画图数据准备，角度、状态值
 angles=np.linspace(0, 2*np.pi, len(labels), endpoint=False)
@@ -52,16 +52,20 @@ ax.plot(angles, stats, 'o-', linewidth=2)
 ax.fill(angles, stats, alpha=0.25)
 
 # 设置中文标题和维度名称
-ax.set_thetagrids(angles * 180/np.pi, labels, FontProperties=font)
-ax.set_title("小明各科成绩",FontProperties = font, size = 20)
+ax.set_thetagrids(angles * 180/np.pi,labels = labels+[labels[0]],font = font)
+ax.set_title("小明各科成绩", font = font, size = 20)
 plt.show()
 ```
-
-
+```python
+angles 
+```
 
 ### 二，将中文字体文件放入matplotlib安装目录下
 
 
+```python
+labels 
+```
 
 这种方法步骤较多，但是只要初始设置了中文字体后，此后用到地方无需再特别指定字体参数。
 
@@ -148,3 +152,9 @@ plt.colorbar()
 plt.show()
 
 ```
+
+```python
+
+```
+
+
