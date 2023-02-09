@@ -182,7 +182,7 @@ git reset的说明：
 git reset HEAD^ #可以回退到上一个版本。
 git reset HEAD^^ #可以回退到上上个版本。
 git reset a234b3 #可以回退到版本号为 a234b3的版本。
-git reset --hard  head^   #修改版本库，保留暂存区，保留工作区
+git reset --hard  head^   #修改版本库，修改暂存区，修改工作区
 git reset --mixed head^  #修改版本库，修改暂存区，保留工作区
 git reset --soft  head^  #修改版本库，保留暂存区，保留工作区
 ```
